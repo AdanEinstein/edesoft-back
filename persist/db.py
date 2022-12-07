@@ -33,8 +33,9 @@ DATA_DE_VENCIMENTO,
 PRECO_DE_AQUISICAO) VALUES 
     (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     '''
+    inserts = []
     for data in data_frame.iterrows():
-        val = (data['Originador'],
+        inserts.append((data['Originador'],
                data['Doc Originador'],
                data['Cedente'],
                data['Doc Cedente'],
@@ -52,7 +53,7 @@ PRECO_DE_AQUISICAO) VALUES
                data['Parcela'],
                datetime.datetime.strptime(data['Data de Emissão'], "%d/%m/%Y").strftime("%Y-%m-%d"),
                datetime.datetime.strptime(data['Data de Vencimento'], "%d/%m/%Y").strftime("%Y-%m-%d"),
-               data['Preço de Aquisição'])
-        cursor.execute(sql, val)
+               data['Preço de Aquisição']))
 
+    cursor.executemany(sql, inserts)
     mydb.commit()
